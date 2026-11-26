@@ -24,26 +24,19 @@
 
   <section id="produits">
     <h2>Nos produits</h2>
-    <div class="cartes">
-      <div class="carte">
-        <img src="images/chemise.jpg" alt="Chemise africaine">
-        <h3>Chemise africaine</h3>
-        <p>Chemise en tissu wax, coupe confortable.</p>
-        <p class="prix">15 000 FCFA</p>
-      </div>
-      <div class="carte">
-        <img src="images/panier.jpg" alt="Panier artisanal">
-        <h3>Panier artisanal</h3>
-        <p>Panier tressé à la main par des artisans locaux.</p>
-        <p class="prix">8 000 FCFA</p>
-      </div>
-      <div class="carte">
-        <img src="images/cafe.jpg" alt="Café local">
-        <h3>Café local</h3>
-        <p>Café moulu, cultivé et torréfié localement.</p>
-        <p class="prix">5 000 FCFA</p>
+
+    <div class="outils">
+      <input type="search" id="recherche" placeholder="Rechercher un produit...">
+      <div class="filtres">
+        <button class="filtre actif" data-categorie="tous">Tous</button>
+        <button class="filtre" data-categorie="chemise">Chemises</button>
+        <button class="filtre" data-categorie="panier">Paniers</button>
+        <button class="filtre" data-categorie="cafe">Cafés</button>
       </div>
     </div>
+
+    <div class="cartes" id="cartes"></div>
+    <p id="vide" hidden>Aucun produit trouvé.</p>
   </section>
 
   <section id="contact">
@@ -55,5 +48,68 @@
   <footer>
     <p>&copy; 2026 AfriShop. Tous droits réservés.</p>
   </footer>
+
+  <script>
+    const produits = [
+      { nom: "Chemise brodée beige",         categorie: "chemise", prix: 15000, image: "images/chemise1.jpg" },
+      { nom: "Chemise verte et blanche",     categorie: "chemise", prix: 18000, image: "images/chemise2.jpg" },
+      { nom: "Chemise à motifs sable",       categorie: "chemise", prix: 12000, image: "images/chemise3.jpg" },
+
+      { nom: "Boîte en rotin à couvercle",   categorie: "panier",  prix: 9000,  image: "images/panier1.jpg" },
+      { nom: "Boîte en rotin compartimentée", categorie: "panier", prix: 11000, image: "images/panier2.jpg" },
+      { nom: "Panier à anse naturel",        categorie: "panier",  prix: 8000,  image: "images/panier3.jpg" },
+      { nom: "Paniers de rangement (lot)",   categorie: "panier",  prix: 14000, image: "images/panier4.jpg" },
+      { nom: "Paniers de rangement",         categorie: "panier",  prix: 12000, image: "images/panier5.jpg" },
+      { nom: "Paniers zoulou en roseau",     categorie: "panier",  prix: 10000, image: "images/panier6.jpg" },
+
+      { nom: "Café latte caramel",           categorie: "cafe",    prix: 5000,  image: "images/cafe1.jpg" },
+      { nom: "Expresso du matin",            categorie: "cafe",    prix: 4500,  image: "images/cafe2.jpg" },
+      { nom: "Café noir et grains",          categorie: "cafe",    prix: 5000,  image: "images/cafe3.jpg" },
+      { nom: "Café en grains (sachet)",      categorie: "cafe",    prix: 6000,  image: "images/cafe4.jpg" },
+      { nom: "Café serré",                   categorie: "cafe",    prix: 4000,  image: "images/cafe5.jpg" },
+      { nom: "Cappuccino",                   categorie: "cafe",    prix: 5500,  image: "images/cafe6.jpg" },
+      { nom: "Grains de café (sac de jute)", categorie: "cafe",    prix: 7000,  image: "images/cafe7.jpg" }
+    ];
+
+    const conteneur = document.getElementById("cartes");
+    const champ = document.getElementById("recherche");
+    const boutons = document.querySelectorAll(".filtre");
+    const vide = document.getElementById("vide");
+    let categorie = "tous";
+
+    function simplifier(texte) {
+      return texte.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function afficher() {
+      const recherche = simplifier(champ.value.trim());
+      const liste = produits.filter(function (p) {
+        return (categorie === "tous" || p.categorie === categorie)
+          && simplifier(p.nom).includes(recherche);
+      });
+
+      conteneur.innerHTML = liste.map(function (p) {
+        return '<div class="carte">'
+          + '<img src="' + p.image + '" alt="' + p.nom + '">'
+          + '<h3>' + p.nom + '</h3>'
+          + '<p class="prix">' + p.prix.toLocaleString("fr-FR") + ' FCFA</p>'
+          + '</div>';
+      }).join("");
+
+      vide.hidden = liste.length > 0;
+    }
+
+    boutons.forEach(function (bouton) {
+      bouton.addEventListener("click", function () {
+        categorie = bouton.dataset.categorie;
+        boutons.forEach(function (b) { b.classList.remove("actif"); });
+        bouton.classList.add("actif");
+        afficher();
+      });
+    });
+
+    champ.addEventListener("input", afficher);
+    afficher();
+  </script>
 </body>
 </html>
