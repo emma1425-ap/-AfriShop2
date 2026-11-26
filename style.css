@@ -32,3 +32,27 @@ nav a {
   padding: 10px 20px;
   border-radius: 4px;
 }
+
+#produits {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+#produits h2 { color: darkgreen; }
+
+.cartes {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.carte {
+  flex: 0 0 250px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.carte img { width: 100%; height: 180px; object-fit: cover; }
+
+.prix { font-weight: bold; color: darkgreen; }
